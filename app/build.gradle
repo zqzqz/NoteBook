@@ -1,33 +1,24 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        release {
-            keyAlias 'wlandroid'
-            keyPassword 'android'
-            storeFile file('F:/signePackage/wlandroid')
-            storePassword 'android'
-        }
-    }
     compileSdkVersion 26
+    buildToolsVersion "27.0.3"
     defaultConfig {
-        applicationId "com.wulee.notebook"
-        minSdkVersion 15
+        applicationId "com.example.wulee.notebook"
+        minSdkVersion 26
         targetSdkVersion 26
         versionCode 4
-        versionName "1.0.3"
+        versionName "1.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
-    }
-    //删除META-INF信息
-    packagingOptions {
-        exclude 'META-INF/rxjava.properties'
+        debug{
+            debuggable true
+        }
     }
 }
 
