@@ -10,10 +10,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.content.Context;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.clans.fab.FloatingActionButton;
@@ -49,6 +52,9 @@ import static com.wulee.notebook.App.aCache;
  */
 
 public class MainActivity extends BaseActivity implements View.OnClickListener{
+
+    final Context context = this;
+    private String key;
     private static final String TAG = "MainActivity";
     private SwipeRefreshLayout swipeLayout;
     private RecyclerView rv_list_main;
@@ -95,11 +101,66 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 final Note note = (Note) adapter.getData().get(position);
 
-                Intent intent = new Intent(MainActivity.this, NoteActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("note", note);
-                intent.putExtra("data", bundle);
-                startActivity(intent);
+
+
+
+                if (note.getIsEncrypt() > 0) {
+                    // get prompts.xml view
+                    LayoutInflater li = LayoutInflater.from(context);
+                    View promptsView = li.inflate(R.layout.pass_alert, null);
+
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                            context);
+
+                    // set prompts.xml to alertdialog builder
+                    alertDialogBuilder.setView(promptsView);
+
+                    final EditText userInput = (EditText) promptsView
+                            .findViewById(R.id.key);
+
+                    // set dialog message
+                    alertDialogBuilder
+                            .setCancelable(false)
+                            .setNegativeButton("确认",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,int id) {
+                                            /** DO THE METHOD HERE WHEN PROCEED IS CLICKED*/
+                                            key = (userInput.getText()).toString();
+
+                                            /** CHECK FOR USER'S INPUT **/
+                                            // check password here
+                                            Intent intent = new Intent(MainActivity.this, NoteActivity.class);
+                                            Bundle bundle = new Bundle();
+                                            bundle.putSerializable("key", key);
+                                            bundle.putSerializable("note", note);
+                                            intent.putExtra("data", bundle);
+                                            startActivity(intent);
+                                        }
+                                    })
+                            .setPositiveButton("取消",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,int id) {
+                                            dialog.dismiss();
+                                        }
+
+                                    }
+
+                            );
+
+                    // create alert dialog
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+
+                    // show it
+                    alertDialog.show();
+
+
+                } else {
+                    Intent intent = new Intent(MainActivity.this, NoteActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("note", note);
+                    intent.putExtra("data", bundle);
+                    startActivity(intent);
+                }
             }
         });
 

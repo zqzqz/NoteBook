@@ -6,5 +6,5 @@ package com.wulee.notebook.bean;
 
 public class Constant {
 
-    public static final String BOMB_APP_ID = "18a0989170b53784266c84d8e83fa8e1";
+    public static final String BOMB_APP_ID = "5caf9bb9c09cbce2a86def8cd9c97ee2";
 }

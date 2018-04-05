@@ -7,12 +7,15 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.CompoundButton;
 
 import com.wulee.notebook.R;
 import com.wulee.notebook.bean.Note;
@@ -25,11 +28,17 @@ import com.wulee.notebook.utils.SDCardUtil;
 import com.wulee.notebook.utils.ScreenUtils;
 import com.wulee.notebook.utils.StringUtils;
 import com.wulee.notebook.xrichtext.RichTextEditor;
+import com.wulee.notebook.utils.CryptoUtils;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
@@ -50,6 +59,8 @@ public class NewActivity extends BaseActivity {
     private EditText et_new_title;
     private RichTextEditor et_new_content;
     private TextView tv_new_time;
+    private Switch encrypt_flag;
+    private EditText encrypt_key;
 
     private NoteDao noteDao;
     private Note note;//笔记对象
@@ -113,6 +124,10 @@ public class NewActivity extends BaseActivity {
         et_new_title = findViewById(R.id.et_new_title);
         et_new_content = findViewById(R.id.et_new_content);
         tv_new_time = findViewById(R.id.tv_new_time);
+        encrypt_flag = findViewById(R.id.encrypt);
+        encrypt_key = findViewById(R.id.encryptKey);
+
+
 
         Intent intent = getIntent();
         flag = intent.getIntExtra("flag", 0);//0新建，1编辑
@@ -122,12 +137,14 @@ public class NewActivity extends BaseActivity {
 
             myTitle = note.getTitle();
             myContent = note.getContent();
-            myNoteTime = note.getCreatedAt();
+            myNoteTime = note.getUpdatedAt();
 
 
             setTitle("编辑笔记");
-            tv_new_time.setText(note.getCreatedAt());
+            tv_new_time.setText(note.getUpdatedAt());
             et_new_title.setText(note.getTitle());
+            encrypt_flag.setVisibility(View.INVISIBLE);
+            encrypt_key.setVisibility(View.INVISIBLE);
             et_new_content.post(new Runnable() {
                 @Override
                 public void run() {
@@ -140,6 +157,23 @@ public class NewActivity extends BaseActivity {
             setTitle("新建笔记");
             myNoteTime = DateUtils.date2string(new Date());
             tv_new_time.setText(myNoteTime);
+            if (note.getIsEncrypt() > 0) {
+                encrypt_flag.setChecked(true);
+                encrypt_key.setVisibility(View.VISIBLE);
+            } else {
+                encrypt_flag.setChecked(false);
+                encrypt_key.setVisibility(View.INVISIBLE);
+            }
+
+            encrypt_flag.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        encrypt_key.setVisibility(View.VISIBLE);
+                    } else {
+                        encrypt_key.setVisibility(View.INVISIBLE);
+                    }
+                }
+            });
         }
     }
 
@@ -246,11 +280,30 @@ public class NewActivity extends BaseActivity {
             }
         }
 
+        // add tone analysis here
+        //
+        note.setUpdatedAt(noteTime);
         note.setTitle(noteTitle);
-        note.setContent(noteContent);
         note.setType(2);
+        // edit background here
         note.setBgColor("#FFFFFF");
-        note.setIsEncrypt(0);
+        // config encryption status here
+        if (encrypt_flag.isChecked()) {
+            note.setIsEncrypt(1);
+            String password = encrypt_key.getText().toString();
+            //UserInfo user = BmobUser.getCurrentUser(UserInfo.class);
+            CryptoUtils crypto = new CryptoUtils();
+            String code = "";
+            try {
+                code = crypto.encrypt(noteContent, password);
+                noteContent = code;
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                note.setIsEncrypt(1);
+            }
+        } else note.setIsEncrypt(0);
+        note.setContent(noteContent);
+
         if (flag == 0) { //新建笔记
             if (noteTitle.length() == 0 && noteContent.length() == 0) {
                 if (!isBackground) {
@@ -264,7 +317,7 @@ public class NewActivity extends BaseActivity {
                     @Override
                     public void done(String objectId, BmobException e) {
                         hideProgressBar();
-                        if(e == null){
+                        if (e == null) {
                             //note.setId(objectId);
                             noteDao.insertNote(note);
                             flag = 1;//插入以后只能是编辑
@@ -273,7 +326,7 @@ public class NewActivity extends BaseActivity {
                                 setResult(RESULT_OK, intent);
                                 finish();
                             }
-                        }else{
+                        } else {
                             showToast(e.getMessage());
                         }
                     }
@@ -289,7 +342,6 @@ public class NewActivity extends BaseActivity {
             }
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
