@@ -41,7 +41,9 @@
         <activity
             android:name=".ui.RegistActivity"
             android:screenOrientation="portrait"/>
-
+        <activity
+            android:name=".ui.SearchActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="me.iwf.photopicker.PhotoPickerActivity"
             android:screenOrientation="portrait" />
