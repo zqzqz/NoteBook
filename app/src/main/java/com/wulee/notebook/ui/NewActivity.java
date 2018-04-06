@@ -35,6 +35,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -298,8 +300,8 @@ public class NewActivity extends BaseActivity {
                 code = crypto.encrypt(noteContent, password);
                 noteContent = code;
             } catch (Exception e) {
-                System.out.println(e.getMessage());
-                note.setIsEncrypt(1);
+                Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, e);
+                note.setIsEncrypt(0);
             }
         } else note.setIsEncrypt(0);
         note.setContent(noteContent);
