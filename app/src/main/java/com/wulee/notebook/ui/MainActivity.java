@@ -31,12 +31,15 @@ import com.wulee.notebook.view.SpacesItemDecoration;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.BmobUpdateListener;
 import cn.bmob.v3.listener.FindListener;
@@ -289,6 +292,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
         if (isSearch()) {
             BmobQuery<Note> queryDate = new BmobQuery<>();
+            queryDate.addWhereEqualTo("user", user);
             BmobQuery<Note> queryTitle = new BmobQuery<>();
             queryTitle.addWhereEqualTo("user", user);
             BmobQuery<Note> queryContent = new BmobQuery<>();
@@ -299,13 +303,36 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 //queryContent.addWhereContains("content", searchKeyword);
                 //queryTitle = queryTitle.or(Arrays.asList(queryTitle, queryContent));
                 //query = query.and(Arrays.asList(query, queryTitle));
-                query.addWhereEqualTo("title", searchKeyword);
-            }
-            if (searchDate.length() > 0) {
-                query.addWhereEqualTo("updatedAt", searchDate);
-                //query = query.and(Arrays.asList(query, queryDate));
+                queryTitle.addWhereEqualTo("title", searchKeyword);
             }
 
+            if (searchDate.length() > 0) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                BmobQuery<Note> queryAfter = new BmobQuery<>();
+                queryAfter.addWhereEqualTo("user", user);
+                BmobQuery<Note> queryBefore = new BmobQuery<>();
+                queryBefore.addWhereEqualTo("user", user);
+
+                Date date  = null;
+
+                try {
+                    date = sdf.parse(searchDate + " 23:59:59");
+                } catch (Exception ex) {
+                    showToast("日期错误");
+                }
+                queryBefore.addWhereLessThanOrEqualTo("createdAt",new BmobDate(date));
+
+                try {
+                    date = sdf.parse(searchDate + " 00:00:00");
+                } catch (Exception ex) {
+                    showToast("日期错误");
+                }
+                queryAfter.addWhereGreaterThanOrEqualTo("createdAt",new BmobDate(date));
+
+                queryDate.and(Arrays.asList(queryBefore, queryAfter));
+            }
+
+            query.and(Arrays.asList(queryDate, queryTitle));
         }
         query.include("user");
         query.order("-createdAt");

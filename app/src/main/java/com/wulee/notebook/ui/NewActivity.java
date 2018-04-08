@@ -288,7 +288,7 @@ public class NewActivity extends BaseActivity {
         note.setTitle(noteTitle);
         note.setType(2);
         // edit background here
-        note.setBgColor("#FFFFFF");
+        note.setBgColor("#20A17B");
         // config encryption status here
         if (encrypt_flag.isChecked()) {
             note.setIsEncrypt(1);

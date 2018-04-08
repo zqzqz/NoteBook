@@ -1,5 +1,7 @@
 package com.wulee.notebook.adapter;
 
+import android.graphics.Color;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.wulee.notebook.R;
@@ -17,6 +19,8 @@ public class NoteListAdapter extends BaseQuickAdapter<Note,BaseViewHolder> {
     @Override
     protected void convert(BaseViewHolder baseViewHolder,Note note) {
         baseViewHolder.setText(R.id.tv_list_title,note.getTitle());
+
+        baseViewHolder.setBackgroundColor(R.id.note_layout, Color.parseColor(note.getBgColor()));
 
         if (note.getIsEncrypt() > 0) {
             baseViewHolder.setText(R.id.tv_list_summary,"Locked");
