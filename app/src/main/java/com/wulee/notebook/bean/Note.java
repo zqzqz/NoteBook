@@ -1,5 +1,7 @@
 package com.wulee.notebook.bean;
 
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,8 +23,8 @@ public class Note extends BmobObject implements Serializable{
     private String bgColor;//背景颜色，存储颜色代码
     private int isEncrypt ;//是否加密，0未加密，1加密
     public UserInfo user;
-    public JSONObject contentAbstract;
-    public JSONObject sentiment;
+    public String contentAbstract;
+    public String sentiment;
 
 
     public String getId() {
@@ -93,6 +95,7 @@ public class Note extends BmobObject implements Serializable{
                 this.content = code;
             } catch (Exception e) {
                 this.setIsEncrypt(0);
+                this.content = ct;
             }
         } // Encrypt if private note
         else {this.content = ct;} // Not encrypt if not a private Note
@@ -102,18 +105,18 @@ public class Note extends BmobObject implements Serializable{
 
     // 产生情感分析
     private void generateSentiment(String ct){
-        this.sentiment = com.wulee.notebook.utils.TextSentiment.sentiment(ct);
+        this.sentiment = com.wulee.notebook.utils.TextSentiment.sentiment(ct).toString();
     }
 
     //产生文本分类（摘要）
     private void generateAbstract(String ct){
-        this.contentAbstract = com.wulee.notebook.utils.TextAbstract.CTabstract(ct,this.title);
+        this.contentAbstract = com.wulee.notebook.utils.TextAbstract.CTabstract(ct,this.title).toString();
     }
 
     //获得两篇文章的相似程度
     public double contentSimilarity(Note nc){
-        JSONObject jb2 = nc.contentAbstract;
-        JSONObject jb1 = this.contentAbstract;
+        JSONObject jb2 = new JSONObject(nc.contentAbstract);
+        JSONObject jb1 = new JSONObject(contentAbstract);
         double similar = 0;
         JSONArray ja1 = jb1.getJSONArray("classes");
         JSONArray ja2 = jb2.getJSONArray("classes");
@@ -138,7 +141,8 @@ public class Note extends BmobObject implements Serializable{
 
     //获得正面情感的分数，正面+负面=1
     public double getPositiveSentiment(){
-        return this.sentiment.getDouble("positive");
+        JSONObject senti = new JSONObject(this.sentiment);
+        return senti.getDouble("positive");
     }
 
     public double sentimentSimilarity(Note nc){

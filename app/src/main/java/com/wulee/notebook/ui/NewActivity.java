@@ -28,7 +28,6 @@ import com.wulee.notebook.utils.SDCardUtil;
 import com.wulee.notebook.utils.ScreenUtils;
 import com.wulee.notebook.utils.StringUtils;
 import com.wulee.notebook.xrichtext.RichTextEditor;
-import com.wulee.notebook.utils.CryptoUtils;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -299,6 +298,11 @@ public class NewActivity extends BaseActivity {
             note.reviseContent(noteContent, "");
         }
 
+        final Intent intent = new Intent(NewActivity.this, AnalysisActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("note", note);
+        intent.putExtra("data", bundle);
+
         if (flag == 0) { //新建笔记
             if (noteTitle.length() == 0 && noteContent.length() == 0) {
                 if (!isBackground) {
@@ -317,10 +321,6 @@ public class NewActivity extends BaseActivity {
                             noteDao.insertNote(note);
                             flag = 1;//插入以后只能是编辑
                             if (!isBackground) {
-                                Intent intent = new Intent(NewActivity.this, AnalysisActivity.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable("note", note);
-                                intent.putExtra("data", bundle);
                                 startActivity(intent);
                             }
                         } else {
@@ -334,11 +334,7 @@ public class NewActivity extends BaseActivity {
                     || !noteTime.equals(myNoteTime)) {
                 noteDao.updateNote(note);
             }
-            if (!isBackground) {
-                Intent intent = new Intent(NewActivity.this, AnalysisActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("note", note);
-                intent.putExtra("data", bundle);
+            else if (!isBackground) {
                 startActivity(intent);
             }
         }

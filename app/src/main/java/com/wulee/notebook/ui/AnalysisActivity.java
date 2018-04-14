@@ -32,20 +32,9 @@ public class AnalysisActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void initView() {
-        Toolbar toolbar =  findViewById(R.id.toolbar_note);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        setTitle("分析结果");
-
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("data");
-        this.note = (Note) bundle.getSerializable("note");
+        note = (Note) bundle.getSerializable("note");
     }
 
     private void addListener() {
