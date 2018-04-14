@@ -27,11 +27,11 @@ public class NoteClass {
     }
     // 产生情感分析
     private void generateSentiment(String ct){
-        this.sentiment = Enote_v1.qcloudapi.src.TextSentiment.sentiment(ct);
+        this.sentiment = ENote_v1.qcloudapi.src.TextSentiment.sentiment(ct);
     }
     //产生文本分类（摘要）
     private void generateAbstract(String ct){
-        this.contentAbstract = Enote_v1.qcloudapi.src.TextAbstract.CTabstract(ct,this.title);
+        this.contentAbstract = ENote_v1.qcloudapi.src.TextAbstract.CTabstract(ct,this.title);
     }
     //修改标题
     public void reviseTitle(String tt){
@@ -64,6 +64,7 @@ public class NoteClass {
         for (i=0;i<ja1.length();i++){
             tmp = ja1.getJSONObject(i);
             num = tmp.getInt("class_num");
+            if (num == 0) {continue;}
             conf = tmp.getDouble("conf");
             for (j=0;j<ja2.length();j++){
                 tmp2 = ja2.getJSONObject(j);
@@ -97,6 +98,5 @@ public class NoteClass {
 
     // 是否加密了
     public boolean isEncryptTag(){ return encryptTag;}
-
 
 }

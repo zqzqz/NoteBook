@@ -1,5 +1,6 @@
 package ENote_v1;
 
+
 public class NoteTest {
     public static void main(String[] args){
         //test for user
@@ -27,7 +28,7 @@ public class NoteTest {
         String title1 = "作业太多了";
         boolean tag1 = true;
         String content2 = "昨天我去美国玩，今天我到英国玩，过两天去新加坡，再几天去日本，然后……然后梦就醒了" +
-                "梦里什么都有，表面上很开心，但嵌入式的报告还没写，唉。";
+                "梦里什么都有，表面上很开心，但嵌入式的报告还没写，唉，嵌入式老师的报告是真的多，唉。";
         String title2 = "做梦";
         boolean tag2 = false;
         NoteClass n1 = new NoteClass("1",title1,tag1);
@@ -39,6 +40,8 @@ public class NoteTest {
         System.out.println(n2.getTitle());
         System.out.println(n2.getContent(false));
         System.out.println(n2.getPositiveSentiment());
+        System.out.println(n1.contentAbstract);
+        System.out.println(n2.contentAbstract);
         System.out.println(n1.contentSimilarity(n2));
         System.out.println(n1.sentimentSimilarity(n2));
         System.out.println(n1.contentSearch("报告",false));

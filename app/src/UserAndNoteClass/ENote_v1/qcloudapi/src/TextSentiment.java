@@ -1,4 +1,4 @@
-package Enote_v1.qcloudapi.src;
+package ENote_v1.qcloudapi.src;
 import java.util.TreeMap;
 
 import com.qcloud.QcloudApiModuleCenter;
