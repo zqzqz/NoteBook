@@ -39,6 +39,14 @@
         fab:menu_labels_ellipsize="end">
 
         <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/fab_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_user"
+            fab:fab_label="用户信息"
+            style="@style/MenuButtonsSmall" />
+
+        <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab_check_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,11 +56,11 @@
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/fab_logout"
+            style="@style/MenuButtonsSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/icon_logout"
-            fab:fab_label="退出登录"
-            style="@style/MenuButtonsSmall" />
+            fab:fab_label="退出登录" />
 
     </com.github.clans.fab.FloatingActionMenu>
 

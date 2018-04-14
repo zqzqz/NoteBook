@@ -31,6 +31,7 @@ import com.wulee.notebook.view.SpacesItemDecoration;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -62,6 +63,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private FloatingActionMenu fabMenu;
     private FloatingActionButton fabCheckUpdate;
     private FloatingActionButton fabLogout;
+    private FloatingActionButton fabUser;
     private NoteListAdapter mNoteListAdapter;
     private List<Note> noteList;
     private NoteDao noteDao;
@@ -86,6 +88,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         fabMenu =  findViewById(R.id.fab_menu);
         fabCheckUpdate =  findViewById(R.id.fab_check_update);
         fabLogout =  findViewById(R.id.fab_logout);
+        fabUser = findViewById(R.id.fab_user);
         rv_list_main.addItemDecoration(new SpacesItemDecoration(0));//设置item间距
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);//竖向列表
@@ -224,6 +227,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
         fabCheckUpdate.setOnClickListener(this);
         fabLogout.setOnClickListener(this);
+        fabUser.setOnClickListener(this);
     }
 
     //刷新笔记列表
@@ -357,6 +361,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 break;
             case R.id.fab_logout:
                 showLogoutDialog();
+                break;
+            case R.id.fab_user:
+                Intent intent = new Intent(MainActivity.this, UserActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("noteList", (Serializable)noteList);
+                intent.putExtras(bundle);
+                startActivity(intent);
                 break;
         }
     }

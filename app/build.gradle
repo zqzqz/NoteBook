@@ -5,7 +5,7 @@ android {
     buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "com.example.sjtu.notebook"
-        minSdkVersion 26
+        minSdkVersion 21
         targetSdkVersion 26
         versionCode 4
         versionName "1.0.4"
@@ -16,7 +16,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug{
+        debug {
             debuggable true
         }
     }
@@ -46,4 +46,5 @@ dependencies {
     //bmob-sdk
     compile 'cn.bmob.android:bmob-sdk:3.5.7'
     compile 'com.github.clans:fab:1.6.4'
+    compile 'com.prolificinteractive:material-calendarview:1.4.3'
 }
