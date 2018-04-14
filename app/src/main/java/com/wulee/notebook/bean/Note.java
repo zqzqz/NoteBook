@@ -1,10 +1,13 @@
 package com.wulee.notebook.bean;
 
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import cn.bmob.v3.BmobObject;
 import com.qcloud.Utilities.Json.JSONObject;
 import com.qcloud.Utilities.Json.JSONArray;
+import com.wulee.notebook.utils.CryptoUtils;
 /**
  * 描述：笔记实体类
  */
@@ -38,8 +41,19 @@ public class Note extends BmobObject implements Serializable{
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
+    public String getContent() { return this.content; }
+
+    public String decodeContent(String password) {
+        if (this.getIsEncrypt() > 0) {
+            String plain = "";
+            CryptoUtils crypto = new CryptoUtils();
+            try {
+                plain = crypto.decrypt(this.content, password);
+                return plain;
+            } catch (Exception e) {
+                return "";
+            }
+        } else return this.content;
     }
 
     public void setContent(String content) {
@@ -68,6 +82,22 @@ public class Note extends BmobObject implements Serializable{
 
     public void setIsEncrypt(int isEncrypt) {
         this.isEncrypt = isEncrypt;
+    }
+
+    public void reviseContent(String ct, String password){
+        if (this.isEncrypt > 0) {
+            CryptoUtils crypto = new CryptoUtils();
+            String code = "";
+            try {
+                code = crypto.encrypt(this.content, password);
+                this.content = code;
+            } catch (Exception e) {
+                this.setIsEncrypt(0);
+            }
+        } // Encrypt if private note
+        else {this.content = ct;} // Not encrypt if not a private Note
+        this.generateAbstract(ct);
+        this.generateSentiment(ct);
     }
 
     // 产生情感分析

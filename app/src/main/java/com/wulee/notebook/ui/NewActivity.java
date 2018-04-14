@@ -293,18 +293,11 @@ public class NewActivity extends BaseActivity {
         if (encrypt_flag.isChecked()) {
             note.setIsEncrypt(1);
             String password = encrypt_key.getText().toString();
-            //UserInfo user = BmobUser.getCurrentUser(UserInfo.class);
-            CryptoUtils crypto = new CryptoUtils();
-            String code = "";
-            try {
-                code = crypto.encrypt(noteContent, password);
-                noteContent = code;
-            } catch (Exception e) {
-                Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, e);
-                note.setIsEncrypt(0);
-            }
-        } else note.setIsEncrypt(0);
-        note.setContent(noteContent);
+            note.reviseContent(noteContent, password);
+        } else {
+            note.setIsEncrypt(0);
+            note.reviseContent(noteContent, "");
+        }
 
         if (flag == 0) { //新建笔记
             if (noteTitle.length() == 0 && noteContent.length() == 0) {
@@ -324,9 +317,11 @@ public class NewActivity extends BaseActivity {
                             noteDao.insertNote(note);
                             flag = 1;//插入以后只能是编辑
                             if (!isBackground) {
-                                Intent intent = new Intent();
-                                setResult(RESULT_OK, intent);
-                                finish();
+                                Intent intent = new Intent(NewActivity.this, AnalysisActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("note", note);
+                                intent.putExtra("data", bundle);
+                                startActivity(intent);
                             }
                         } else {
                             showToast(e.getMessage());
@@ -340,7 +335,11 @@ public class NewActivity extends BaseActivity {
                 noteDao.updateNote(note);
             }
             if (!isBackground) {
-                finish();
+                Intent intent = new Intent(NewActivity.this, AnalysisActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("note", note);
+                intent.putExtra("data", bundle);
+                startActivity(intent);
             }
         }
     }

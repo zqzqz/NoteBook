@@ -22,8 +22,6 @@ import com.wulee.notebook.xrichtext.RichTextView;
 
 import java.io.File;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import rx.Observable;
 import rx.Observer;
@@ -94,21 +92,12 @@ public class NoteActivity extends BaseActivity {
         note = (Note) bundle.getSerializable("note");
         if (note.getIsEncrypt() > 0) {
             key = (String) bundle.getSerializable("key");
+            myContent = note.decodeContent(key);
+        } else {
+            myContent = note.getContent();
         }
 
         myTitle = note.getTitle();
-        myContent = note.getContent();
-        if (note.getIsEncrypt() > 0) {
-            String plain = "";
-            CryptoUtils crypto = new CryptoUtils();
-            try {
-                plain = crypto.decrypt(myContent, key);
-                myContent = plain;
-            } catch (Exception e) {
-                Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, e);
-            }
-
-        }
 
         tv_note_title.setText(myTitle);
         tv_note_content.post(new Runnable() {
