@@ -31,12 +31,19 @@ import com.wulee.notebook.view.SpacesItemDecoration;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 
+<<<<<<< HEAD
 import java.io.Serializable;
+=======
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+>>>>>>> f41c82a49f03307aff8e0d46bbf165a7044e945e
 import java.util.Iterator;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobDate;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.BmobUpdateListener;
 import cn.bmob.v3.listener.FindListener;
@@ -67,6 +74,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private NoteListAdapter mNoteListAdapter;
     private List<Note> noteList;
     private NoteDao noteDao;
+    private String searchKeyword;
+    private String searchDate;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,6 +102,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);//竖向列表
         rv_list_main.setLayoutManager(layoutManager);
+
+        Intent intent = getIntent();
+        try {
+            Bundle bundle = intent.getBundleExtra("data");
+            searchKeyword = (String) bundle.getSerializable("keyword");
+            searchDate = (String) bundle.getSerializable("date");
+        } catch (Exception ex) {
+            // pass
+        }
 
 
         mNoteListAdapter = new NoteListAdapter(R.layout.list_item_note,noteList);
@@ -232,11 +250,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     //刷新笔记列表
     private void refreshNoteList(final boolean isRefresh){
-        UserInfo user = BmobUser.getCurrentUser(UserInfo.class);
-        BmobQuery<Note> query = new BmobQuery<>();
-        query.addWhereEqualTo("user",user);
-        query.include("user");
-        query.order("-createdAt");
+
+        BmobQuery<Note> query = generateQuery();
+
         if(!isRefresh){
             showProgressBar("正在加载...");
         }
@@ -249,22 +265,94 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                     swipeLayout.setRefreshing(false);
                 }
                 if(e == null){
-                    noteDao.deleteAllNote();
-                    if(list != null && list.size()>0){
-                        tvNodata.setVisibility(View.GONE);
-                        for(Note note : list){
-                            noteDao.insertNote(note);
+                    if (isSearch()) {
+                        noteDao.deleteAllNote();
+                        if (list != null && list.size() > 0) {
+                            tvNodata.setVisibility(View.GONE);
+                            for (Note note : list) {
+                                noteDao.insertNote(note);
+                            }
                         }
-                    }else{
-                        tvNodata.setVisibility(View.VISIBLE);
                     }
-                    noteList = noteDao.queryNotesAll();
-                    mNoteListAdapter.setNewData(noteList);
+                    if (list == null || list.size() <= 0){
+                            tvNodata.setVisibility(View.VISIBLE);
+                    }
+
+                    //noteList = noteDao.queryNotesAll();
+                    mNoteListAdapter.setNewData(list);
+                    clearSearch();
                 }else{
                     showToast(e.getErrorCode()+ ","+e.getMessage());
                 }
             }
         });
+    }
+
+    /*
+        generate bmob query is search is enabled: fuck! bmob does not provide unpaid user with addWhereContains !!!
+     */
+    private BmobQuery<Note> generateQuery() {
+        UserInfo user = BmobUser.getCurrentUser(UserInfo.class);
+        BmobQuery<Note> query = new BmobQuery<>();
+        query.addWhereEqualTo("user", user);
+
+
+        if (isSearch()) {
+            BmobQuery<Note> queryDate = new BmobQuery<>();
+            queryDate.addWhereEqualTo("user", user);
+            BmobQuery<Note> queryTitle = new BmobQuery<>();
+            queryTitle.addWhereEqualTo("user", user);
+            BmobQuery<Note> queryContent = new BmobQuery<>();
+            queryContent.addWhereEqualTo("user", user);
+
+            if (searchKeyword.length() > 0) {
+                //queryTitle.addWhereContains("title", searchKeyword);
+                //queryContent.addWhereContains("content", searchKeyword);
+                //queryTitle = queryTitle.or(Arrays.asList(queryTitle, queryContent));
+                //query = query.and(Arrays.asList(query, queryTitle));
+                queryTitle.addWhereEqualTo("title", searchKeyword);
+            }
+
+            if (searchDate.length() > 0) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                BmobQuery<Note> queryAfter = new BmobQuery<>();
+                queryAfter.addWhereEqualTo("user", user);
+                BmobQuery<Note> queryBefore = new BmobQuery<>();
+                queryBefore.addWhereEqualTo("user", user);
+
+                Date date  = null;
+
+                try {
+                    date = sdf.parse(searchDate + " 23:59:59");
+                } catch (Exception ex) {
+                    showToast("日期错误");
+                }
+                queryBefore.addWhereLessThanOrEqualTo("createdAt",new BmobDate(date));
+
+                try {
+                    date = sdf.parse(searchDate + " 00:00:00");
+                } catch (Exception ex) {
+                    showToast("日期错误");
+                }
+                queryAfter.addWhereGreaterThanOrEqualTo("createdAt",new BmobDate(date));
+
+                queryDate.and(Arrays.asList(queryBefore, queryAfter));
+            }
+
+            query.and(Arrays.asList(queryDate, queryTitle));
+        }
+        query.include("user");
+        query.order("-createdAt");
+        return query;
+    }
+
+    private void clearSearch() {
+        searchKeyword = null;
+        searchDate = null;
+    }
+
+    private boolean isSearch() {
+        return  (searchKeyword != null || searchDate != null);
     }
 
     @Override
@@ -291,6 +379,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 Intent intent = new Intent(MainActivity.this, NewActivity.class);
                 intent.putExtra("flag", 0);
                 startActivity(intent);
+                break;
+            case R.id.action_search:
+                Intent intentSearch = new Intent(MainActivity.this, SearchActivity.class);
+                intentSearch.putExtra("flag", 0);
+                startActivity(intentSearch);
                 break;
         }
         return super.onOptionsItemSelected(item);

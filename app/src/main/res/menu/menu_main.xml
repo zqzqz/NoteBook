@@ -3,9 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.sendtion.xrichtextdemo.ui.MainActivity">
     <item
+        android:id="@+id/action_search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:orderInCategory="102"
+        android:title="search"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/action_new_note"
         android:icon="@mipmap/icon_new"
+<<<<<<< HEAD
         android:orderInCategory="100"
+=======
+        android:orderInCategory="103"
+>>>>>>> f41c82a49f03307aff8e0d46bbf165a7044e945e
         android:title=""
         app:showAsAction="always" />
 

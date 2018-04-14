@@ -62,6 +62,45 @@ public class NoteDao {
         return noteList;
     }
 
+    /*
+    query notes using sql string
+     */
+    public List<Note> queryNotes(String content, Integer emotion, String date) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        List<Note> noteList = new ArrayList<>();
+        Note note ;
+        String sql ;
+        Cursor cursor = null;
+        try {
+
+            cursor = db.query(true, "Notes", null, "( n_title LIKE ? OR n_content LIKE ? )",new String[]{content, content}, null, null, "n_update_time", null);
+            //cursor = db.query("note", null, null, null, null, null, "n_id desc");
+            while (cursor.moveToNext()) {
+                //循环获得展品信息
+                note = new Note();
+                note.setId(cursor.getString(cursor.getColumnIndex("n_id")));
+                note.setTitle(cursor.getString(cursor.getColumnIndex("n_title")));
+                note.setContent(cursor.getString(cursor.getColumnIndex("n_content")));
+                note.setType(cursor.getInt(cursor.getColumnIndex("n_type")));
+                note.setBgColor(cursor.getString(cursor.getColumnIndex("n_bg_color")));
+                note.setIsEncrypt(cursor.getInt(cursor.getColumnIndex("n_encrypt")));
+                note.setUpdatedAt(cursor.getString(cursor.getColumnIndex("n_update_time")));
+                noteList.add(note);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
+        }
+        return noteList;
+    }
+
     /**
      * 插入笔记
      */

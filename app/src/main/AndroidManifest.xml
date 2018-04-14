@@ -40,7 +40,14 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.RegistActivity"
+<<<<<<< HEAD
             android:screenOrientation="portrait" />
+=======
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.SearchActivity"
+            android:screenOrientation="portrait"/>
+>>>>>>> f41c82a49f03307aff8e0d46bbf165a7044e945e
         <activity
             android:name="me.iwf.photopicker.PhotoPickerActivity"
             android:screenOrientation="portrait" />

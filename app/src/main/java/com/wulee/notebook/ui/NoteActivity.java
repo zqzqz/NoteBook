@@ -22,6 +22,8 @@ import com.wulee.notebook.xrichtext.RichTextView;
 
 import java.io.File;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import rx.Observable;
 import rx.Observer;
@@ -101,10 +103,11 @@ public class NoteActivity extends BaseActivity {
             CryptoUtils crypto = new CryptoUtils();
             try {
                 plain = crypto.decrypt(myContent, key);
+                myContent = plain;
             } catch (Exception e) {
-                // pass
+                Logger.getLogger(CryptoUtils.class.getName()).log(Level.SEVERE, null, e);
             }
-            //myContent = plain;
+
         }
 
         tv_note_title.setText(myTitle);
