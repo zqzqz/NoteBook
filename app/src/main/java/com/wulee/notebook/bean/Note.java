@@ -3,7 +3,8 @@ package com.wulee.notebook.bean;
 import java.io.Serializable;
 
 import cn.bmob.v3.BmobObject;
-
+import com.qcloud.Utilities.Json.JSONObject;
+import com.qcloud.Utilities.Json.JSONArray;
 /**
  * 描述：笔记实体类
  */
@@ -17,6 +18,8 @@ public class Note extends BmobObject implements Serializable{
     private String bgColor;//背景颜色，存储颜色代码
     private int isEncrypt ;//是否加密，0未加密，1加密
     public UserInfo user;
+    public JSONObject contentAbstract;
+    public JSONObject sentiment;
 
 
     public String getId() {
@@ -65,5 +68,51 @@ public class Note extends BmobObject implements Serializable{
 
     public void setIsEncrypt(int isEncrypt) {
         this.isEncrypt = isEncrypt;
+    }
+
+    // 产生情感分析
+    private void generateSentiment(String ct){
+        this.sentiment = com.wulee.notebook.utils.TextSentiment.sentiment(ct);
+    }
+
+    //产生文本分类（摘要）
+    private void generateAbstract(String ct){
+        this.contentAbstract = com.wulee.notebook.utils.TextAbstract.CTabstract(ct,this.title);
+    }
+
+    //获得两篇文章的相似程度
+    public double contentSimilarity(Note nc){
+        JSONObject jb2 = nc.contentAbstract;
+        JSONObject jb1 = this.contentAbstract;
+        double similar = 0;
+        JSONArray ja1 = jb1.getJSONArray("classes");
+        JSONArray ja2 = jb2.getJSONArray("classes");
+        int i,j;
+        int num;
+        double conf;
+        JSONObject tmp,tmp2;
+        for (i=0;i<ja1.length();i++){
+            tmp = ja1.getJSONObject(i);
+            num = tmp.getInt("class_num");
+            if (num == 0) {continue;}
+            conf = tmp.getDouble("conf");
+            for (j=0;j<ja2.length();j++){
+                tmp2 = ja2.getJSONObject(j);
+                if (num == tmp2.getInt("class_num")){
+                    similar += tmp2.getDouble("conf");
+                }
+            }
+        }
+        return similar;
+    }
+
+    //获得正面情感的分数，正面+负面=1
+    public double getPositiveSentiment(){
+        return this.sentiment.getDouble("positive");
+    }
+
+    public double sentimentSimilarity(Note nc){
+        double t1 = nc.getPositiveSentiment();
+        return Math.abs(t1 - this.getPositiveSentiment());
     }
 }

@@ -47,4 +47,6 @@ dependencies {
     compile 'cn.bmob.android:bmob-sdk:3.5.7'
     compile 'com.github.clans:fab:1.6.4'
     compile 'com.prolificinteractive:material-calendarview:1.4.3'
+    // https://mvnrepository.com/artifact/com.qcloud/qcloud-java-sdk
+    compile group: 'com.qcloud', name: 'qcloud-java-sdk', version: '2.0.6'
 }
