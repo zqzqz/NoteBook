@@ -31,13 +31,12 @@ import com.wulee.notebook.view.SpacesItemDecoration;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.PermissionListener;
 
-<<<<<<< HEAD
+
 import java.io.Serializable;
-=======
+
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
->>>>>>> f41c82a49f03307aff8e0d46bbf165a7044e945e
 import java.util.Iterator;
 import java.util.List;
 
@@ -278,8 +277,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                             tvNodata.setVisibility(View.VISIBLE);
                     }
 
-                    //noteList = noteDao.queryNotesAll();
-                    mNoteListAdapter.setNewData(list);
+                    noteList = noteDao.queryNotesAll();
+                    mNoteListAdapter.setNewData(noteList);
                     clearSearch();
                 }else{
                     showToast(e.getErrorCode()+ ","+e.getMessage());
@@ -456,11 +455,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 showLogoutDialog();
                 break;
             case R.id.fab_user:
-                Intent intent = new Intent(MainActivity.this, UserActivity.class);
+                Intent intentUser = new Intent(MainActivity.this, UserActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("noteList", (Serializable)noteList);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                intentUser.putExtras(bundle);
+                startActivity(intentUser);
                 break;
         }
     }
