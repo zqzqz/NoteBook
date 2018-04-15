@@ -297,6 +297,8 @@ public class NewActivity extends BaseActivity {
             note.setIsEncrypt(0);
             note.reviseContent(noteContent, "");
         }
+        // wait for api
+        while(note.sentiment == null || note.contentAbstract == null);
 
         final Intent intent = new Intent(NewActivity.this, AnalysisActivity.class);
         Bundle bundle = new Bundle();

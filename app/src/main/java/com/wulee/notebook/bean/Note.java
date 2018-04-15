@@ -105,12 +105,22 @@ public class Note extends BmobObject implements Serializable{
 
     // 产生情感分析
     private void generateSentiment(String ct){
-        this.sentiment = com.wulee.notebook.utils.TextSentiment.sentiment(ct).toString();
+        final String cont = ct;
+        new Thread(new Runnable() {
+            public void run() {
+                sentiment = com.wulee.notebook.utils.TextSentiment.sentiment(cont).toString();
+            }
+        }).start();
     }
 
     //产生文本分类（摘要）
     private void generateAbstract(String ct){
-        this.contentAbstract = com.wulee.notebook.utils.TextAbstract.CTabstract(ct,this.title).toString();
+        final String cont = ct;
+        new Thread(new Runnable() {
+            public void run() {
+                contentAbstract = com.wulee.notebook.utils.TextAbstract.CTabstract(cont,title).toString();
+            }
+        }).start();
     }
 
     //获得两篇文章的相似程度
