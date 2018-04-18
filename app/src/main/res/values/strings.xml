@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">记事本</string>
     <string name="title_activity_user">UserActivity</string>
+    <string name="title_activity_recommend">RecommendActivity</string>
 </resources>

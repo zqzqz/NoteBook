@@ -134,6 +134,7 @@ public class Note extends BmobObject implements Serializable{
         int num;
         double conf;
         JSONObject tmp,tmp2;
+
         for (i=0;i<ja1.length();i++){
             tmp = ja1.getJSONObject(i);
             num = tmp.getInt("class_num");

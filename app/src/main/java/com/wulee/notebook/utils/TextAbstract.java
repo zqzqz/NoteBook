@@ -1,12 +1,9 @@
 package com.wulee.notebook.utils;
-
 import java.util.TreeMap;
+
 import com.qcloud.QcloudApiModuleCenter;
 import com.qcloud.Module.Cvm;
 import com.qcloud.Utilities.Json.JSONObject;
-/**
- * Created by dell on 2018/4/14.
- */
 
 
 public class TextAbstract {

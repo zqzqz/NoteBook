@@ -59,8 +59,16 @@
     <com.wulee.notebook.xrichtext.RichTextView
         android:id="@+id/tv_note_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="350dp"
         android:textSize="@dimen/text_size_18"
-        android:textColor="@color/grey_800"/>
+        android:textColor="@color/grey_800">
+
+    </com.wulee.notebook.xrichtext.RichTextView>
+
+    <Button
+        android:id="@+id/new_recom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="推荐" />
 
 </LinearLayout>

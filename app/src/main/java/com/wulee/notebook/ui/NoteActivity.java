@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.wulee.notebook.R;
@@ -33,7 +34,7 @@ import rx.schedulers.Schedulers;
 /**
  * 笔记详情
  */
-public class NoteActivity extends BaseActivity {
+public class NoteActivity extends BaseActivity implements View.OnClickListener {
 
     private TextView tv_note_title;//笔记标题
     private RichTextView tv_note_content;//笔记内容
@@ -47,6 +48,7 @@ public class NoteActivity extends BaseActivity {
 
     private ProgressDialog loadingDialog;
     private Subscription subsLoading;
+    private Button recombt;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,8 @@ public class NoteActivity extends BaseActivity {
                 finish();
             }
         });
+        recombt = findViewById(R.id.new_recom);
+        recombt.setOnClickListener((View.OnClickListener) this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_note);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -202,6 +206,19 @@ public class NoteActivity extends BaseActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.new_recom:
+                final Intent intent = new Intent(NoteActivity.this, RecommendActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("note", note);
+                intent.putExtra("data", bundle);
+                startActivity(intent);
+                break;
+        }
     }
 
     @Override
