@@ -1,5 +1,6 @@
 package com.wulee.notebook.bean;
 
+import android.graphics.Color;
 import android.os.Parcelable;
 
 import java.io.Serializable;
@@ -25,6 +26,7 @@ public class Note extends BmobObject implements Serializable{
     public UserInfo user;
     public String contentAbstract;
     public String sentiment;
+    private double sentiment_score;
 
 
     public String getId() {
@@ -75,7 +77,12 @@ public class Note extends BmobObject implements Serializable{
     }
 
     public void setBgColor(String bgColor) {
-        this.bgColor = bgColor;
+        try {
+            this.sentiment_score = getPositiveSentiment();
+            this.bgColor = generateBgColor();
+        } catch (Exception e) {
+            this.bgColor = bgColor;
+        }
     }
 
     public int getIsEncrypt() {
@@ -159,5 +166,26 @@ public class Note extends BmobObject implements Serializable{
     public double sentimentSimilarity(Note nc){
         double t1 = nc.getPositiveSentiment();
         return Math.abs(t1 - this.getPositiveSentiment());
+    }
+
+    public double getSentiment_score() {
+        return this.sentiment_score;
+    }
+
+    public String generateBgColor() {
+        if (this.sentiment_score >= 0 && this.sentiment_score <= 1) {
+            int[] startColor = {255, 100, 100};
+            int[] endColor = {100, 100, 255};
+            int[] targetColor = new int[3];
+            for (int i=0; i<3; i++) {
+                targetColor[i] = (int) (startColor[i] + this.sentiment_score * (endColor[i] - startColor[i]));
+            }
+
+            int alpha = 200;
+            int colorint = (alpha & 0xff) << 24 | (targetColor[0] & 0xff) << 16 | (targetColor[1] & 0xff) << 8 | (targetColor[2] & 0xff);
+            return String.format("#%06X", 0xFFFFFFFF & colorint);
+        } else {
+            return "#FFFFFF";
+        }
     }
 }

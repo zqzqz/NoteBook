@@ -286,8 +286,6 @@ public class NewActivity extends BaseActivity {
         note.setUpdatedAt(noteTime);
         note.setTitle(noteTitle);
         note.setType(2);
-        // edit background here
-        note.setBgColor("#FFFFFF");
         // config encryption status here
         if (encrypt_flag.isChecked()) {
             note.setIsEncrypt(1);
@@ -299,6 +297,7 @@ public class NewActivity extends BaseActivity {
         }
         // wait for api
         while(note.sentiment == null || note.contentAbstract == null);
+        note.setBgColor("#FFFFFF");
 
         final Intent intent = new Intent(NewActivity.this, AnalysisActivity.class);
         Bundle bundle = new Bundle();
