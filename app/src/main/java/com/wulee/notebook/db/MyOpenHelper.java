@@ -23,7 +23,7 @@ public class MyOpenHelper extends SQLiteOpenHelper {
         db.execSQL("create table db_note(n_id varchar primary key, n_title varchar, " +
                 "n_content varchar, n_type integer, " +
                 "n_bg_color varchar, n_encrypt integer, n_create_time String," +
-                "n_update_time String )");
+                "n_update_time String, n_sentiment String, n_content_abstract String)");
     }
 
     @Override

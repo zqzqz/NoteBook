@@ -165,7 +165,8 @@ public class Note extends BmobObject implements Serializable{
 
     public double sentimentSimilarity(Note nc){
         double t1 = nc.getPositiveSentiment();
-        return Math.abs(t1 - this.getPositiveSentiment());
+        double t2 = this.getPositiveSentiment();
+        return Math.abs(t1-t2);
     }
 
     public double getSentiment_score() {
@@ -187,5 +188,21 @@ public class Note extends BmobObject implements Serializable{
         } else {
             return "#FFFFFF";
         }
+    }
+
+    public void setSentiment(String s) {
+        this.sentiment = s;
+    }
+
+    public void setContentAbstract(String s) {
+        this.contentAbstract = s;
+    }
+
+    public String getSentiment() {
+        return this.sentiment;
+    }
+
+    public String getContentAbstract() {
+        return this.contentAbstract;
     }
 }
