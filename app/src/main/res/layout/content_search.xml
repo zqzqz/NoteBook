@@ -37,29 +37,18 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/radioButton"
-                android:layout_width="wrap_content"
+                android:id="@+id/radio_positive"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="喜" />
+                android:text="positive" />
 
             <RadioButton
-                android:layout_width="wrap_content"
+                android:id="@+id/radio_negative"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="怒" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="哀" />
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="乐" />
+                android:text="negative" />
         </LinearLayout>
 
         <Space

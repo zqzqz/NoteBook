@@ -75,6 +75,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private NoteDao noteDao;
     private String searchKeyword;
     private String searchDate;
+    private int searchSentiment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,6 +108,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             Bundle bundle = intent.getBundleExtra("data");
             searchKeyword = (String) bundle.getSerializable("keyword");
             searchDate = (String) bundle.getSerializable("date");
+            searchSentiment = (int) bundle.getSerializable("sentiment");
         } catch (Exception ex) {
             // pass
         }
@@ -264,7 +266,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                     swipeLayout.setRefreshing(false);
                 }
                 if(e == null){
-                    if (isSearch()) {
+                    if (true) {
                         noteDao.deleteAllNote();
                         if (list != null && list.size() > 0) {
                             tvNodata.setVisibility(View.GONE);
@@ -303,6 +305,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             queryTitle.addWhereEqualTo("user", user);
             BmobQuery<Note> queryContent = new BmobQuery<>();
             queryContent.addWhereEqualTo("user", user);
+            BmobQuery<Note> querySentiment = new BmobQuery<>();
+            querySentiment.addWhereEqualTo("user", user);
 
             if (searchKeyword.length() > 0) {
                 //queryTitle.addWhereContains("title", searchKeyword);
@@ -338,7 +342,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 queryDate.and(Arrays.asList(queryBefore, queryAfter));
             }
 
-            query.and(Arrays.asList(queryDate, queryTitle));
+            switch (searchSentiment) {
+                case 0:
+                case 3:
+                    break;
+                case 1:
+                    querySentiment.addWhereLessThan("sentiment_score", 0.5);
+                    break;
+                case 2:
+                    querySentiment.addWhereGreaterThanOrEqualTo("sentiment_score", 0.5);
+                    break;
+                default:
+                    break;
+            }
+
+            query.and(Arrays.asList(queryDate, queryTitle, querySentiment));
         }
         query.include("user");
         query.order("-createdAt");

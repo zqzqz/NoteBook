@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
 
 import com.wulee.notebook.R;
 
@@ -23,6 +24,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
     private EditText dateText;
     private Button submitBtn;
     private Button dateBtn;
+    private RadioButton radio_positive;
+    private RadioButton radio_negative;
     private Calendar cal;
     private int year, month, day;
 
@@ -52,6 +55,8 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
         dateText = findViewById(R.id.dateText);
         submitBtn = findViewById(R.id.submitBtn);
         dateBtn = findViewById(R.id.dateBtn);
+        radio_positive = findViewById(R.id.radio_positive);
+        radio_negative = findViewById(R.id.radio_negative);
     }
 
     private void addListener() {
@@ -83,11 +88,16 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
             case R.id.submitBtn:
                 String keyword = keywordText.getText().toString();
                 String date = dateText.getText().toString();
+                int sentiment = 0;
+                if( radio_positive.isChecked() ) sentiment = 1;
+                sentiment = sentiment * 2;
+                if( radio_negative.isChecked() ) sentiment = sentiment + 1;
 
                 Intent intent = new Intent(SearchActivity.this, MainActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("keyword", keyword);
                 bundle.putSerializable("date", date);
+                bundle.putSerializable("sentiment", sentiment);
                 intent.putExtra("data", bundle);
                 startActivity(intent);
                 break;
