@@ -98,7 +98,7 @@ public class Note extends BmobObject implements Serializable{
             CryptoUtils crypto = new CryptoUtils();
             String code = "";
             try {
-                code = crypto.encrypt(this.content, password);
+                code = crypto.encrypt(ct, password);
                 this.content = code;
             } catch (Exception e) {
                 this.setIsEncrypt(0);
@@ -179,10 +179,10 @@ public class Note extends BmobObject implements Serializable{
             int[] endColor = {100, 100, 255};
             int[] targetColor = new int[3];
             for (int i=0; i<3; i++) {
-                targetColor[i] = (int) (startColor[i] + this.sentiment_score * (endColor[i] - startColor[i]));
+                targetColor[i] = (int) (startColor[i] - this.sentiment_score * (endColor[i] - startColor[i]));
             }
 
-            int alpha = 200;
+            int alpha = 100;
             int colorint = (alpha & 0xff) << 24 | (targetColor[0] & 0xff) << 16 | (targetColor[1] & 0xff) << 8 | (targetColor[2] & 0xff);
             return String.format("#%06X", 0xFFFFFFFF & colorint);
         } else {
