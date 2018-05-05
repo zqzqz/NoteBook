@@ -30,7 +30,7 @@
         <com.github.mikephil.charting.charts.HorizontalBarChart
             android:id="@+id/analysis_sensi"
             android:layout_width="match_parent"
-            android:layout_height="180dip"
+            android:layout_height="160dip"
             android:background="@android:color/white" />
 
 
@@ -49,7 +49,16 @@
             android:layout_width="match_parent"
             android:layout_marginRight="16dp"
             android:layout_marginLeft="16dp"
-            android:layout_height="360dip" />
+            android:layout_height="350dip" />
+
+        <TextView
+            android:id="@+id/tip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:textSize="@dimen/text_size_20"
+            android:textColor="@color/grey_800"
+            android:padding="@dimen/activity_margin_16"/>
 
         <Button
             android:id="@+id/analysis_recom"
