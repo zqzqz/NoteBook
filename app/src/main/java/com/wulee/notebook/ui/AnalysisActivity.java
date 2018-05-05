@@ -135,7 +135,7 @@ public class AnalysisActivity extends BaseActivity implements View.OnClickListen
         pie.setHighlightPerTapEnabled(false);//点击不响应
         pie.setCenterText("");
         pie.setEntryLabelColor(Color.BLACK);
-        pie.setEntryLabelTextSize(20f);
+        pie.setEntryLabelTextSize(15f);
         pie.getDescription().setEnabled(false);
 
         JSONObject jc = new JSONObject(note.contentAbstract);
@@ -213,7 +213,7 @@ public class AnalysisActivity extends BaseActivity implements View.OnClickListen
         PieData data =new PieData(pieDataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextColor(Color.BLACK);
-        data.setValueTextSize(20f);
+        data.setValueTextSize(15f);
         return data;
 
     }

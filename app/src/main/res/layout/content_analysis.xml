@@ -24,13 +24,13 @@
             android:gravity="center_horizontal"
             android:text="情感分析结果"
             android:textColor="@color/grey_050"
-            android:textSize="@dimen/text_size_20" />
+            android:textSize="@dimen/text_size_14" />
 
 
         <com.github.mikephil.charting.charts.HorizontalBarChart
             android:id="@+id/analysis_sensi"
             android:layout_width="match_parent"
-            android:layout_height="160dip"
+            android:layout_height="100dp"
             android:background="@android:color/white" />
 
 
@@ -42,21 +42,21 @@
             android:gravity="center_horizontal"
             android:text="内容分析结果"
             android:textColor="@color/grey_050"
-            android:textSize="@dimen/text_size_20" />
+            android:textSize="@dimen/text_size_14" />
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/piechart"
             android:layout_width="match_parent"
             android:layout_marginRight="16dp"
             android:layout_marginLeft="16dp"
-            android:layout_height="350dip" />
+            android:layout_height="200dp" />
 
         <TextView
             android:id="@+id/tip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:textSize="@dimen/text_size_20"
+            android:textSize="@dimen/text_size_14"
             android:textColor="@color/grey_800"
             android:padding="@dimen/activity_margin_16"/>
 

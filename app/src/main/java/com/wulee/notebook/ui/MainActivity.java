@@ -266,7 +266,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                     swipeLayout.setRefreshing(false);
                 }
                 if(e == null){
-                    if (isSearch()) {
+                    if (true) {
                         noteDao.deleteAllNote();
                         if (list != null && list.size() > 0) {
                             tvNodata.setVisibility(View.GONE);
@@ -279,8 +279,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                             tvNodata.setVisibility(View.VISIBLE);
                     }
 
-                    //noteList = noteDao.queryNotesAll();
-                    mNoteListAdapter.setNewData(list);
+                    noteList = noteDao.queryNotesAll();
+                    mNoteListAdapter.setNewData(noteList);
                     clearSearch();
                 }else{
                     showToast(e.getErrorCode()+ ","+e.getMessage());

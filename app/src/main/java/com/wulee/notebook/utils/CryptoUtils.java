@@ -1,4 +1,7 @@
 package com.wulee.notebook.utils;
+import android.annotation.TargetApi;
+import android.os.Build;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.logging.Level;
@@ -26,6 +29,7 @@ public class CryptoUtils {
      * @param password 加密密码
      * @return 返回Base64转码后的加密数据
      */
+    @TargetApi(Build.VERSION_CODES.O)
     public static String encrypt(String content, String password) {
         try {
             Cipher cipher = Cipher.getInstance(DEFAULT_CIPHER_ALGORITHM);// 创建密码器
@@ -51,6 +55,7 @@ public class CryptoUtils {
      * @param password
      * @return
      */
+    @TargetApi(Build.VERSION_CODES.O)
     public static String decrypt(String content, String password) {
 
         try {
