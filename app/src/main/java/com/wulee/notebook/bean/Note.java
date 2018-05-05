@@ -49,7 +49,7 @@ public class Note extends BmobObject implements Serializable{
     public String getContent() { return this.content; }
 
     public String decodeContent(String password) {
-        lock = 0;/*
+        lock = 0;
         if (false) { //this.getIsEncrypt() > 0) {
             String plain = "";
             CryptoUtils crypto = new CryptoUtils();
@@ -62,8 +62,7 @@ public class Note extends BmobObject implements Serializable{
             } catch (Exception e) {
                 return content;
             }
-        } else return this.content;*/
-        return this.content;
+        } else return this.content;
     }
 
     public void setContent(String content) {
@@ -101,7 +100,7 @@ public class Note extends BmobObject implements Serializable{
 
     public void reviseContent(String ct, String password){
         lock = 0;
-        /*
+
         if (false) {//this.isEncrypt > 0) {
             CryptoUtils crypto = new CryptoUtils();
             String code = "";
@@ -114,8 +113,6 @@ public class Note extends BmobObject implements Serializable{
             }
         } // Encrypt if private note
         else {this.content = ct;} // Not encrypt if not a private Note
-        */
-        this.content = ct;
         this.generateAbstract(ct);
         this.generateSentiment(ct);
     }

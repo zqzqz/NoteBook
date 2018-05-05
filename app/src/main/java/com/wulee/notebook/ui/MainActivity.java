@@ -103,16 +103,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);//竖向列表
         rv_list_main.setLayoutManager(layoutManager);
 
-        Intent intent = getIntent();
-        try {
-            Bundle bundle = intent.getBundleExtra("data");
-            searchKeyword = (String) bundle.getSerializable("keyword");
-            searchDate = (String) bundle.getSerializable("date");
-            searchSentiment = (int) bundle.getSerializable("sentiment");
-        } catch (Exception ex) {
-            // pass
-        }
-
 
         mNoteListAdapter = new NoteListAdapter(R.layout.list_item_note,noteList);
         rv_list_main.setAdapter(mNoteListAdapter);
@@ -509,6 +499,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             }
         }
         return super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        try {
+            Bundle bundle = intent.getBundleExtra("data");
+            searchKeyword = (String) bundle.getSerializable("keyword");
+            searchDate = (String) bundle.getSerializable("date");
+            searchSentiment = (int) bundle.getSerializable("sentiment");
+        } catch (Exception ex) {
+            // pass
+        }
     }
 
 }
