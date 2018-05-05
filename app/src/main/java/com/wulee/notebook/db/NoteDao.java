@@ -155,9 +155,9 @@ public class NoteDao {
         values.put("n_bg_color", note.getBgColor());
         values.put("n_encrypt", note.getIsEncrypt());
         values.put("n_create_time", note.getCreatedAt());
-        values.put("m_update_time", note.getUpdatedAt());
-        values.put("m_sentiment", note.getSentiment());
-        values.put("m_content_abstract", note.getContentAbstract());
+        values.put("n_update_time", note.getUpdatedAt());
+        values.put("n_sentiment", note.getSentiment());
+        values.put("n_content_abstract", note.getContentAbstract());
         db.update("db_note", values, "n_id=?", new String[]{note.getId()+""});
         db.close();
     }
