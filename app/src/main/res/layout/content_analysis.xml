@@ -27,14 +27,11 @@
             android:textSize="@dimen/text_size_20" />
 
 
-        <TextView
+        <com.github.mikephil.charting.charts.HorizontalBarChart
             android:id="@+id/analysis_sensi"
             android:layout_width="match_parent"
-            android:layout_height="170dp"
-            android:background="@null"
-            android:padding="@dimen/activity_margin_16"
-            android:textColor="@color/grey_800"
-            android:textSize="@dimen/text_size_20" />
+            android:layout_height="180dip"
+            android:background="@android:color/white" />
 
 
         <TextView
@@ -47,14 +44,12 @@
             android:textColor="@color/grey_050"
             android:textSize="@dimen/text_size_20" />
 
-        <TextView
-            android:id="@+id/analysis_content"
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/piechart"
             android:layout_width="match_parent"
-            android:layout_height="170dp"
-            android:background="@null"
-            android:padding="@dimen/activity_margin_16"
-            android:textColor="@color/grey_800"
-            android:textSize="@dimen/text_size_20" />
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_height="360dip" />
 
         <Button
             android:id="@+id/analysis_recom"

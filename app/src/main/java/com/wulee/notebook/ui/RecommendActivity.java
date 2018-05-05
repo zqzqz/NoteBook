@@ -284,14 +284,14 @@ public class RecommendActivity extends BaseActivity {
                         int maxindex2 = 0;
                         double similarity1;
                         double similarity2;
-                        double maxsimilarity1 = 0;
+                        double maxsimilarity1 = 2;
                         double maxsimilarity2 = 0;
                         for(int i=0;i<len;i++){
                             Note noteone = list.get(i);
-                            if(noteone.getContent() == note.getContent()){continue;}
+                            if(note.getContent().equals(noteone.getContent())){continue;}
                             similarity1 = note.sentimentSimilarity(noteone);
                             similarity2 = note.contentSimilarity(noteone);
-                            if(similarity1>maxsimilarity1){
+                            if(similarity1<maxsimilarity1){
                                 maxsimilarity1 = similarity1;
                                 maxindex1 = i;
                             }

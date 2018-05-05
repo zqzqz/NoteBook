@@ -80,11 +80,14 @@ public class NewActivity extends BaseActivity {
     private Subscription subsLoading;
     private Subscription subsInsert;
 
+    public static NewActivity test_a = null;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new);
         initView();
+        test_a = this;
     }
 
     private void initView() {
@@ -297,12 +300,8 @@ public class NewActivity extends BaseActivity {
         }
         // wait for api
         while(note.sentiment == null || note.contentAbstract == null);
-        note.setBgColor("#FFFFFF");
 
-        final Intent intent = new Intent(NewActivity.this, AnalysisActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("note", note);
-        intent.putExtra("data", bundle);
+        note.setBgColor("#FFFFFF");
 
         if (flag == 0) { //新建笔记
             if (noteTitle.length() == 0 && noteContent.length() == 0) {
@@ -322,7 +321,12 @@ public class NewActivity extends BaseActivity {
                             noteDao.insertNote(note);
                             flag = 1;//插入以后只能是编辑
                             if (!isBackground) {
+                                final Intent intent = new Intent(NewActivity.this, AnalysisActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("note", note);
+                                intent.putExtra("data", bundle);
                                 startActivity(intent);
+                                finish();
                             }
                         } else {
                             showToast(e.getMessage());
@@ -336,7 +340,12 @@ public class NewActivity extends BaseActivity {
                 noteDao.updateNote(note);
             }
             else if (!isBackground) {
+                final Intent intent = new Intent(NewActivity.this, AnalysisActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("note", note);
+                intent.putExtra("data", bundle);
                 startActivity(intent);
+                finish();
             }
         }
     }
