@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -18,19 +19,23 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.wulee.notebook.R;
 import com.wulee.notebook.bean.Note;
 
 import com.qcloud.Utilities.Json.JSONObject;
 import com.qcloud.Utilities.Json.JSONArray;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 
@@ -46,6 +51,7 @@ public class AnalysisActivity extends BaseActivity implements View.OnClickListen
     private double sentiment;
     private Button recombt;
     private JSONArray pie_json;
+    private TextView tip;
 
 
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +76,7 @@ public class AnalysisActivity extends BaseActivity implements View.OnClickListen
         });
 
         setTitle("内容分析");
+        tip = findViewById(R.id.tip);
         recombt = findViewById(R.id.analysis_recom);
 
         Intent intent = getIntent();
@@ -78,6 +85,9 @@ public class AnalysisActivity extends BaseActivity implements View.OnClickListen
 
         sentiment = note.getPositiveSentiment();
 
+        if(sentiment>0.7)tip.setText("小提示：又是元气满满的一天");
+        else if(sentiment<0.4)tip.setText("小提示：人生不如意，可还要继续加油哦");
+        else tip.setText("小提示：平平淡淡才是真");
 
         mChart = findViewById(R.id.analysis_sensi);
         mChart.setDrawBarShadow(false);
@@ -148,12 +158,28 @@ public class AnalysisActivity extends BaseActivity implements View.OnClickListen
         dataSets.add(set1);
         BarData data = new BarData(dataSets);
         data.setValueTextSize(12f);
+        data.setValueFormatter(new MyValueFormatter());
 
         data.setBarWidth(barWidth);
         mChart.setData(data);
 
         XAxis xl = mChart.getXAxis();
         xl.setValueFormatter(new MyCustomXAxisValueFormatter());
+    }
+
+    public class MyValueFormatter implements IValueFormatter {
+
+        private DecimalFormat mFormat;
+
+        public MyValueFormatter() {
+            mFormat = new DecimalFormat("#0.000"); // use one decimal
+        }
+
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            // write your logic here
+            return mFormat.format(value); // e.g. append a dollar-sign
+        }
     }
 
     public class MyCustomXAxisValueFormatter implements IAxisValueFormatter {
