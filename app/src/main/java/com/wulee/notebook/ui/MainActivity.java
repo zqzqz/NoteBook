@@ -370,7 +370,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     }
 
     private boolean isSearch() {
-        return  (searchKeyword != null || searchDate != null);
+        return  (searchKeyword != null || searchDate != null || searchSentiment>0);
     }
 
     @Override

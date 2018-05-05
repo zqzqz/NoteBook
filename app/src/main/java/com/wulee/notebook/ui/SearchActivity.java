@@ -100,6 +100,7 @@ public class SearchActivity extends BaseActivity implements View.OnClickListener
                 bundle.putSerializable("sentiment", sentiment);
                 intent.putExtra("data", bundle);
                 startActivity(intent);
+                finish();
                 break;
 
             default:
