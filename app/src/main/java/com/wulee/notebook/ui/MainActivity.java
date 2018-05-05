@@ -266,7 +266,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                     swipeLayout.setRefreshing(false);
                 }
                 if(e == null){
-                    if (true) {
+                    if (isSearch()) {
                         noteDao.deleteAllNote();
                         if (list != null && list.size() > 0) {
                             tvNodata.setVisibility(View.GONE);
@@ -279,8 +279,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                             tvNodata.setVisibility(View.VISIBLE);
                     }
 
-                    noteList = noteDao.queryNotesAll();
-                    mNoteListAdapter.setNewData(noteList);
+                    //noteList = noteDao.queryNotesAll();
+                    mNoteListAdapter.setNewData(list);
                     clearSearch();
                 }else{
                     showToast(e.getErrorCode()+ ","+e.getMessage());
@@ -358,6 +358,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
             query.and(Arrays.asList(queryDate, queryTitle, querySentiment));
         }
+
         query.include("user");
         query.order("-createdAt");
         return query;
