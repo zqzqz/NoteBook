@@ -17,7 +17,7 @@ import java.util.Base64;
 public class CryptoUtils {
 
     private static final String KEY_ALGORITHM = "AES";
-    private static final String DEFAULT_CIPHER_ALGORITHM = "AES/ECB/NoPadding";//默认的加密算法
+    private static final String DEFAULT_CIPHER_ALGORITHM = "AES/ECB/PKCS5Padding";//默认的加密算法
 
     /**
      * AES 加密操作
