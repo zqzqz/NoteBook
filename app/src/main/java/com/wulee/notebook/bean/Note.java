@@ -179,7 +179,7 @@ public class Note extends BmobObject implements Serializable{
             int[] endColor = {100, 100, 255};
             int[] targetColor = new int[3];
             for (int i=0; i<3; i++) {
-                targetColor[i] = (int) (startColor[i] - this.sentiment_score * (endColor[i] - startColor[i]));
+                targetColor[i] = (int) (endColor[i] + this.sentiment_score * (startColor[i] - endColor[i]));
             }
 
             int alpha = 100;
