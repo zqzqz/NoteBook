@@ -44,6 +44,7 @@ import javax.crypto.spec.SecretKeySpec;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 import me.iwf.photopicker.PhotoPicker;
 import rx.Observable;
 import rx.Observer;
@@ -138,6 +139,7 @@ public class NewActivity extends BaseActivity {
         if (flag == 1) {//编辑
             Bundle bundle = intent.getBundleExtra("data");
             note = (Note) bundle.getSerializable("note");
+            String ObjectId = note.getObjectId();
 
             myTitle = note.getTitle();
             myContent = note.getContent();
@@ -338,14 +340,30 @@ public class NewActivity extends BaseActivity {
             if (!noteTitle.equals(myTitle) || !noteContent.equals(myContent)
                     || !noteTime.equals(myNoteTime)) {
                 noteDao.updateNote(note);
-            }
-            else if (!isBackground) {
-                final Intent intent = new Intent(NewActivity.this, AnalysisActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("note", note);
-                intent.putExtra("data", bundle);
-                startActivity(intent);
-                finish();
+                UserInfo user = BmobUser.getCurrentUser(UserInfo.class);
+                note.user = user;
+                showProgressBar("正在保存");
+                note.update(note.getObjectId() ,new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        hideProgressBar();
+                        if (e == null) {
+                            //note.setId(objectId);
+                            noteDao.insertNote(note);
+                            flag = 1;//插入以后只能是编辑
+                            if (!isBackground) {
+                                final Intent intent = new Intent(NewActivity.this, AnalysisActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("note", note);
+                                intent.putExtra("data", bundle);
+                                startActivity(intent);
+                                finish();
+                            }
+                        } else {
+                            showToast(e.getMessage());
+                        }
+                    }
+                });
             }
         }
     }

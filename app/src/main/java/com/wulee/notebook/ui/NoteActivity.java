@@ -193,13 +193,17 @@ public class NoteActivity extends BaseActivity implements View.OnClickListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_note_edit://编辑笔记
-                Intent intent = new Intent(NoteActivity.this, NewActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("note", note);
-                intent.putExtra("data", bundle);
-                intent.putExtra("flag", 1);//编辑笔记
-                startActivity(intent);
-                finish();
+                if (note.lock > 0) {
+                    showToast("请先解密文档");
+                } else {
+                    Intent intent = new Intent(NoteActivity.this, NewActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("note", note);
+                    intent.putExtra("data", bundle);
+                    intent.putExtra("flag", 1);//编辑笔记
+                    startActivity(intent);
+                    finish();
+                }
                 break;
             case R.id.action_note_share://分享笔记
                 CommonUtil.shareTextAndImage(this, note.getTitle(), note.getContent(), null);//分享图文

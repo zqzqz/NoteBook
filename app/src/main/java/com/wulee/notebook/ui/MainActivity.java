@@ -154,6 +154,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                                             Intent intent = new Intent(MainActivity.this, NoteActivity.class);
                                             Bundle bundle = new Bundle();
                                             bundle.putSerializable("key", key);
+
                                             bundle.putSerializable("note", note);
                                             intent.putExtra("data", bundle);
                                             startActivity(intent);
@@ -179,6 +180,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 } else {
                     Intent intent = new Intent(MainActivity.this, NoteActivity.class);
                     Bundle bundle = new Bundle();
+                    String objectId = null;
+                    if (noteList != null && noteList.size() > 0) {
+                        Note noteInfo = noteList.get(position);
+                        objectId = noteInfo.getId();
+                    }
+                    note.setObjectId(objectId);
                     bundle.putSerializable("note", note);
                     intent.putExtra("data", bundle);
                     startActivity(intent);
@@ -198,37 +205,42 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        String objectId = null;
-                        if(noteList != null && noteList.size()>0){
-                            Note noteInfo = noteList.get(position);
-                            objectId = noteInfo.getId();
-                        }
-                        final Note note = new Note();
-                        note.setObjectId(objectId);
-                        final String finalObjectId = objectId;
-                        note.delete(objectId,new UpdateListener() {
-                            @Override
-                            public void done(BmobException e) {
-                                if(e == null){
-                                    List<Note> list =  noteList;
-                                    Iterator<Note> iter = list.iterator();
-                                    while(iter.hasNext()){
-                                        Note noteBean = iter.next();
-                                        if(noteBean.equals(finalObjectId)){
-                                            iter.remove();
-                                            break;
-                                        }
-                                    }
-                                    int ret = noteDao.deleteNote(noteObj.getId());
-                                    if (ret > 0){
-                                        showToast("删除成功");
-                                        refreshNoteList(false);
-                                    }
-                                }else{
-                                    showToast("删除失败："+e.getMessage()+","+e.getErrorCode());
-                                }
+                        if (noteObj.lock > 0) {
+                            showToast("请先成功解密文本再删除");
+                        } else {
+
+                            String objectId = null;
+                            if (noteList != null && noteList.size() > 0) {
+                                Note noteInfo = noteList.get(position);
+                                objectId = noteInfo.getId();
                             }
-                        });
+                            final Note note = new Note();
+                            note.setObjectId(objectId);
+                            final String finalObjectId = objectId;
+                            note.delete(objectId, new UpdateListener() {
+                                @Override
+                                public void done(BmobException e) {
+                                    if (e == null) {
+                                        List<Note> list = noteList;
+                                        Iterator<Note> iter = list.iterator();
+                                        while (iter.hasNext()) {
+                                            Note noteBean = iter.next();
+                                            if (noteBean.equals(finalObjectId)) {
+                                                iter.remove();
+                                                break;
+                                            }
+                                        }
+                                        int ret = noteDao.deleteNote(noteObj.getId());
+                                        if (ret > 0) {
+                                            showToast("删除成功");
+                                            refreshNoteList(false);
+                                        }
+                                    } else {
+                                        showToast("删除失败：" + e.getMessage() + "," + e.getErrorCode());
+                                    }
+                                }
+                            });
+                        }
                     }
                 });
                 builder.setNegativeButton("取消", null);
@@ -272,6 +284,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                             tvNodata.setVisibility(View.GONE);
                             for (Note note : list) {
                                 noteDao.insertNote(note);
+                                note.lock = 0;
                             }
                         }
                     }
